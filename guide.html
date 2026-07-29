@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>如何添加到主屏幕</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+    background: #f4f5f7;
+    color: #1f2329;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 20px; margin-bottom: 20px; text-align: center; }
+  .step {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .step-num {
+    display: inline-block;
+    width: 28px; height: 28px;
+    background: #6e56cf;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  .step-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+  }
+  .step-desc { font-size: 14px; color: #5a6068; line-height: 1.6; }
+
+  /* 模拟 Safari 底部 */
+  .safari-bottom {
+    background: #f9f9f9;
+    border: 2px dashed #6e56cf;
+    border-radius: 12px;
+    padding: 14px 12px;
+    margin: 16px 0;
+    position: relative;
+  }
+  .safari-bottom-label {
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    background: #6e56cf;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .safari-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 0;
+  }
+  .safari-icon {
+    font-size: 22px;
+    width: 40px;
+    text-align: center;
+  }
+  .share-btn-demo {
+    position: relative;
+    background: #fff5d6;
+    border: 3px solid #ff6b6b;
+    border-radius: 50%;
+    padding: 6px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(255,107,107,0.5);
+  }
+  .share-btn-demo svg { width: 22px; height: 22px; }
+  .arrow-pointer {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff3b30;
+    font-size: 24px;
+    animation: bounce 1s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-6px); }
+  }
+  .pointer-label {
+    position: absolute;
+    bottom: -56px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff3b30;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .highlight {
+    background: #fff5d6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #d97706;
+  }
+  .tip {
+    background: #eef0ff;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    color: #5b46b8;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<h1>📱 把工作台添加到 iPhone 主屏幕</h1>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">1</span>用 Safari 打开工作台</div>
+  <div class="step-desc">用 Safari 浏览器打开工作台页面,确保你能看到工作台界面。</div>
+</div>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">2</span>找到底部的「分享按钮」</div>
+  <div class="step-desc">看屏幕<span class="highlight">最底部中间</span>,有一个排图标。中间那个就是分享按钮。</div>
+
+  <div class="safari-bottom">
+    <div class="safari-bottom-label">Safari 底部栏</div>
+    <div class="safari-bar">
+      <div class="safari-icon">←</div>
+      <div class="safari-icon">→</div>
+      <div class="share-btn-demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1f2329" stroke-width="2">
+          <path d="M12 3v12M12 3l-4 4M12 3l4 4"/>
+          <path d="M3 13v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/>
+        </svg>
+        <div class="arrow-pointer">👆</div>
+        <div class="pointer-label">就是这个!</div>
+      </div>
+      <div class="safari-icon">📚</div>
+      <div class="safari-icon">📋</div>
+    </div>
+  </div>
+
+  <div class="tip">💡 分享按钮的图标是:<b>方框 + 向上箭头</b>,像「礼物送出去」的样子。<br>如果看不到,试试向上滑动页面,底部栏会重新出现。</div>
+</div>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">3</span>点击分享按钮</div>
+  <div class="step-desc">点一下这个按钮,会从底部弹出一个菜单。</div>
+</div>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">4</span>向下滑动菜单</div>
+  <div class="step-desc">菜单里有很多 App(微信、信息等),<span class="highlight">用手指向上滑动</span>菜单,直到看到<span class="highlight">「添加到主屏幕」</span>选项(图标是方框里一个 + 号)。</div>
+  <div class="tip">⚠️ 如果没看到这个选项,点击菜单最右下角的「·」三个点,或者在「操作」分组里找。</div>
+</div>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">5</span>点击「添加到主屏幕」</div>
+  <div class="step-desc">弹出一个小窗口,显示「工作台」名字,点右上角的<span class="highlight">「添加」</span>按钮。</div>
+</div>
+
+<div class="step">
+  <div class="step-title"><span class="step-num">6</span>完成!</div>
+  <div class="step-desc">回到主屏幕,你会看到一个「工作台」图标。以后点它就能直接打开,跟 App 一样。</div>
+</div>
+
+<div style="text-align:center; margin-top:20px; padding:14px; background:#dcfce7; border-radius:10px; color:#166534; font-size:14px;">
+  ✅ 工作台网址:<br>
+  <b>https://foster-secret-herald-packard.trycloudflare.com/workbench.html</b>
+</div>
+
+</body>
+</html>
