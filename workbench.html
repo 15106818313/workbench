@@ -1804,6 +1804,41 @@
     }
   }
 
+  // 打开博主在对应平台的真实主页(搜索深链)
+  function platformSearchUrl(platform, name) {
+    const q = encodeURIComponent(name);
+    if (platform === '小红书') return 'https://www.xiaohongshu.com/search_result?keyword=' + q;
+    return 'https://www.douyin.com/search/' + q;
+  }
+  function openFriend(id) {
+    const f = friendsData.find(x => x.id === id);
+    if (!f) return;
+    const url = platformSearchUrl(f.platform, f.name);
+    window.open(url, '_blank');
+    showToast('正在打开 ' + f.name + ' 的' + f.platform + '主页…');
+  }
+  // 从消息跳转到选题灵感对应话题
+  function jumpToTopic(title) {
+    let navEl = null;
+    document.querySelectorAll('.nav-item').forEach(n => {
+      const nm = n.querySelector('.name');
+      if (nm && nm.textContent.trim() === '选题灵感') navEl = n;
+    });
+    if (navEl && typeof switchNav === 'function') switchNav(navEl, '选题灵感');
+    setTimeout(() => {
+      const cards = document.querySelectorAll('#inspirationList .topic-title');
+      let target = null;
+      for (const c of cards) {
+        if (c.textContent && title && c.textContent.indexOf(title.slice(0, 4)) >= 0) { target = c; break; }
+      }
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 350);
+  }
+  function markMsgRead(id) {
+    const m = messagesData.find(x => x.id === id);
+    if (m && m.unread) { m.unread = false; renderMessages(); }
+  }
+
   function renderFriends() {
     const list = document.getElementById('friendsList');
     if (!list) return;
@@ -1816,7 +1851,7 @@
           <div class="friend-sub">${escapeHtml(f.sub)}</div>
           <div style="font-size:11px; color:#8a8f96; margin-top:3px;">💬 ${escapeHtml(f.recent)}</div>
         </div>
-        <button class="btn-sm purple" onclick="showToast('查看主页: ' + '${escapeHtml(f.name)}')">${f.action}</button>
+        <button class="btn-sm purple" onclick="openFriend('${f.id}')">${f.action}</button>
       </div>
     `).join('');
   }
@@ -1827,12 +1862,13 @@
     const unreadCount = messagesData.filter(m => m.unread).length;
     document.getElementById('msgUnreadCount').textContent = unreadCount + ' 条未读';
     list.innerHTML = messagesData.map(m => `
-      <div class="msg-item ${m.unread ? 'unread' : ''}" onclick="showToast('${escapeHtml(m.title)}')">
+      <div class="msg-item ${m.unread ? 'unread' : ''}" onclick="markMsgRead('${m.id}')">
         <div class="msg-icon">${m.icon}</div>
         <div class="msg-body">
           <div class="msg-title">${escapeHtml(m.title)}</div>
           <div class="msg-text">${escapeHtml(m.text)}</div>
           <div class="msg-time">${escapeHtml(m.time)}</div>
+          ${m.type === 'hot' ? `<button class="btn-sm purple" style="margin-top:6px;" onclick="event.stopPropagation(); jumpToTopic('${escapeHtml(m.title)}')">去选题 →</button>` : ''}
         </div>
       </div>
     `).join('');
@@ -2212,7 +2248,7 @@
 
   // 强制刷新页面(如果检测到是旧缓存版本)
   (function checkVersion() {
-    const VERSION = '20260729-v2';  // 改这个版本号就会强制刷新一次
+    const VERSION = '20260729-v3';  // 改这个版本号就会强制刷新一次
     const stored = localStorage.getItem('wb_page_version');
     if (stored && stored !== VERSION) {
       // 版本变了,强制刷新一次
