@@ -6,10 +6,10 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=1" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png?v=1" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png?v=1" />
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/icon-180.png?v=1" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=1" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=1" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=1" />
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="icon-180.png?v=1" />
 <title>我的工作台</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1497,7 +1497,7 @@
 
     try {
       // 尝试从数据接口获取最新数据
-      const resp = await fetch('/hotdata.json?_t=' + Date.now(), { cache: 'no-store' });
+      const resp = await fetch('hotdata.json?_t=' + Date.now(), { cache: 'no-store' });
       if (resp.ok) {
         const data = await resp.json();
         if (data.inspiration && data.inspiration.length > 0) {
@@ -1532,34 +1532,22 @@
   }
 
   // 自动检查更新(支持 4 个时点:10:00 / 15:00 / 18:00 / 22:00)
-  // 每个时点之间打开页面都会自动拉取一次最新数据
+  // 每次打开页面(10点后)都会拉取一次服务器最新数据,确保看到当日热榜
   function autoCheckUpdate() {
     const now = new Date();
-    const today = now.toDateString();
     const hour = now.getHours();
+    if (hour < 10) return;  // 10 点前尚无当日更新,不拉
 
-    // 判断当前属于哪个时段
-    let currentSlot;
-    if (hour >= 22) currentSlot = '22';
-    else if (hour >= 18) currentSlot = '18';
-    else if (hour >= 15) currentSlot = '15';
-    else if (hour >= 10) currentSlot = '10';
-    else currentSlot = null;  // 10 点之前不自动拉
+    // 轻量节流:10 分钟内只拉一次,避免反复开关页面狂刷
+    const lastKey = 'wb_last_auto_update_ts';
+    const last = parseInt(localStorage.getItem(lastKey) || '0', 10);
+    if (Date.now() - last < 10 * 60 * 1000) return;
+    localStorage.setItem(lastKey, String(Date.now()));
 
-    if (!currentSlot) return;  // 还没到首个更新时间
-
-    // 检查这个时段是否已经拉过
-    const slotKey = 'wb_last_auto_update_' + today + '_' + currentSlot;
-    if (localStorage.getItem(slotKey)) return;  // 已拉过,不重复
-
-    // 标记已拉
-    localStorage.setItem(slotKey, '1');
-
-    // 自动触发刷新
+    // 自动触发刷新(拉取最新热榜 + 朋友消息)
     setTimeout(() => {
       const btn = document.getElementById('refreshInspBtn');
       if (btn) btn.click();
-      // 同时刷新朋友/消息
       loadFriendsAndMessages();
     }, 500);
   }
@@ -1803,7 +1791,7 @@
 
   async function loadFriendsAndMessages() {
     try {
-      const resp = await fetch('/friends.json?_t=' + Date.now(), { cache: 'no-store' });
+      const resp = await fetch('friends.json?_t=' + Date.now(), { cache: 'no-store' });
       if (resp.ok) {
         const data = await resp.json();
         friendsData = data.friends || [];
@@ -2224,7 +2212,7 @@
 
   // 强制刷新页面(如果检测到是旧缓存版本)
   (function checkVersion() {
-    const VERSION = '20260727-v1';  // 改这个版本号就会强制刷新一次
+    const VERSION = '20260729-v2';  // 改这个版本号就会强制刷新一次
     const stored = localStorage.getItem('wb_page_version');
     if (stored && stored !== VERSION) {
       // 版本变了,强制刷新一次
